@@ -37,4 +37,5 @@ dependencies {
     runtimeOnly('mysql:mysql-connector-java')
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.2'
 }
