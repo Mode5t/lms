@@ -1,4 +1,4 @@
-package cn.chy.lms.mapper;
+package cn.chy.lms.mapper.user;
 
 import cn.chy.lms.bean.user.Reader;
 import org.apache.ibatis.annotations.*;
@@ -27,9 +27,6 @@ public interface ReaderMapper {
 
     @Update("update reader set department=#{department},major=#{major},grade=#{grade} where username=#{username}")
     boolean updateByUsername(Reader reader);
-
-    @Update("update reader set #{key}=#{value}")
-    boolean updateAll(String key, String value);
 
 
 }

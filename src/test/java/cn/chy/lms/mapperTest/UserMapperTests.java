@@ -2,7 +2,7 @@ package cn.chy.lms.mapperTest;
 
 
 import cn.chy.lms.bean.user.User;
-import cn.chy.lms.mapper.UserMapper;
+import cn.chy.lms.mapper.user.UserMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

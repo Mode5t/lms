@@ -4,22 +4,50 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Book {
+    private String isbn;//图书编号
     private String name;//书名
+    private String author;//作者
     private String type;//类型
     private String publisher;//出版商
-    private Date publicDate;//出版日期
+    private Date publicationDate;//出版日期
     private double price;//价钱
 
     public Book() {
 
     }
 
-    public Book(String name, String type, String publisher, Date publicDate, double price) {
+    public Book(String isbn, String name, String author, String type, String publisher, Date publicationDate, double price) {
+        this.isbn = isbn;
         this.name = name;
+        this.author = author;
         this.type = type;
         this.publisher = publisher;
-        this.publicDate = publicDate;
+        this.publicationDate = publicationDate;
         this.price = price;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public Date getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getName() {
@@ -46,14 +74,6 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public Date getPublicDate() {
-        return publicDate;
-    }
-
-    public void setPublicDate(Date publicDate) {
-        this.publicDate = publicDate;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -62,7 +82,6 @@ public class Book {
         this.price = price;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,13 +89,14 @@ public class Book {
         Book book = (Book) o;
         return Double.compare(book.price, price) == 0 &&
                 Objects.equals(name, book.name) &&
+                Objects.equals(author, book.author) &&
                 Objects.equals(type, book.type) &&
                 Objects.equals(publisher, book.publisher) &&
-                Objects.equals(publicDate, book.publicDate);
+                Objects.equals(publicationDate, book.publicationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, type, publisher, publicDate, price);
+        return Objects.hash(name, author, type, publisher, publicationDate, price);
     }
 }

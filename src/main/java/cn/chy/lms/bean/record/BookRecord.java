@@ -1,35 +1,30 @@
 package cn.chy.lms.bean.record;
 
 import cn.chy.lms.bean.book.Book;
+import cn.chy.lms.bean.book.BookInstance;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class BookRecord {
-    private String id;//编号
-    private Book book;//对应的书
-    private boolean isBorrowed;//是否借出
-    private Date borrowDate;//借出时间
-    private Date returnDate;//归还时间
+    private Book book;
+    private List<BookInstance> bookInstances;
 
     public BookRecord() {
 
     }
 
-    public BookRecord(String id, Book book, boolean isBorrowed, Date borrowDate, Date returnDate) {
-        this.id = id;
+    public BookRecord(Book book, List<BookInstance> bookInstances) {
         this.book = book;
-        this.isBorrowed = isBorrowed;
-        this.borrowDate = borrowDate;
-        this.returnDate = returnDate;
+        this.bookInstances = bookInstances;
     }
 
-    public String getId() {
-        return id;
+    public List<BookInstance> getBookInstances() {
+        return bookInstances;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setBookInstances(List<BookInstance> bookInstances) {
+        this.bookInstances = bookInstances;
     }
 
     public Book getBook() {
@@ -40,44 +35,17 @@ public class BookRecord {
         this.book = book;
     }
 
-    public boolean isBorrowed() {
-        return isBorrowed;
-    }
-
-    public void setBorrowed(boolean borrowed) {
-        isBorrowed = borrowed;
-    }
-
-    public Date getBorrowDate() {
-        return borrowDate;
-    }
-
-    public void setBorrowDate(Date borrowDate) {
-        this.borrowDate = borrowDate;
-    }
-
-    public Date getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(Date returnDate) {
-        this.returnDate = returnDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookRecord that = (BookRecord) o;
-        return isBorrowed == that.isBorrowed &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(book, that.book) &&
-                Objects.equals(borrowDate, that.borrowDate) &&
-                Objects.equals(returnDate, that.returnDate);
+        return Objects.equals(book, that.book) &&
+                Objects.equals(bookInstances, that.bookInstances);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, book, isBorrowed, borrowDate, returnDate);
+        return Objects.hash(book, bookInstances);
     }
 }

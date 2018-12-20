@@ -1,7 +1,7 @@
 package cn.chy.lms.mapperTest;
 
 import cn.chy.lms.bean.user.Administrator;
-import cn.chy.lms.mapper.AdminMapper;
+import cn.chy.lms.mapper.user.AdminMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class AdminMapperTests implements MapperTemplate {
     @Autowired
     private AdminMapper adminMapper;
 
-    private Administrator administrator = new Administrator("name", 2, new Date(), "id", "user", "pass");
+    private Administrator administrator = new Administrator("name", 2, new Date(), "id", "user", "pass", false);
 
     @Test
     @Override

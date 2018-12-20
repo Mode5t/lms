@@ -1,7 +1,10 @@
-package cn.chy.lms.mapper;
+package cn.chy.lms.mapper.user;
 
 import cn.chy.lms.bean.user.Administrator;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -25,9 +28,9 @@ public interface AdminMapper {
 
     @Select("select * from user u,admin a where u.username=a.username")
     public List<Administrator> findAll();
-
-    @Deprecated
-    @Update("update admin set attr where username=#{username}")
-    public boolean update(Administrator administrator);
+//
+//    @Deprecated
+//    @Update("update admin set attr where username=#{username}")
+//    public boolean update(Administrator administrator);
 
 }

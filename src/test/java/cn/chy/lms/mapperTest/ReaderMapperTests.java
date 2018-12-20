@@ -1,8 +1,8 @@
 package cn.chy.lms.mapperTest;
 
 import cn.chy.lms.bean.user.Reader;
-import cn.chy.lms.mapper.ReaderMapper;
-import cn.chy.lms.mapper.UserMapper;
+import cn.chy.lms.mapper.user.ReaderMapper;
+import cn.chy.lms.mapper.user.UserMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,7 +10,7 @@ public class Administrator extends User {
     public Administrator() {
     }
 
-    public Administrator(String name, int age, Date birthday, String idenity, String username, String password) {
-        super(name, age, birthday, idenity, username, password);
+    public Administrator(String name, int age, Date birthday, String idenity, String username, String password, boolean isOnline) {
+        super(name, age, birthday, idenity, username, password, isOnline);
     }
 }

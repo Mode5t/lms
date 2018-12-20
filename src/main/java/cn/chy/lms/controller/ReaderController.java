@@ -1,7 +1,7 @@
 package cn.chy.lms.controller;
 
 import cn.chy.lms.bean.user.Reader;
-import cn.chy.lms.mapper.ReaderMapper;
+import cn.chy.lms.mapper.user.ReaderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,11 +42,6 @@ public class ReaderController {
     @RequestMapping("/update")
     public boolean update(@RequestParam Reader reader) {
         return readerMapper.updateByUsername(reader);
-    }
-
-    @RequestMapping("/updateAll")
-    public boolean updateAll(@RequestParam String key, @RequestParam String value) {
-        return readerMapper.updateAll(key, value);
     }
 
 
