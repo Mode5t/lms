@@ -15,13 +15,19 @@ public class Reader extends User {
 
     }
 
-    public Reader(String name, int age, Date birthday, String idenity, String username, String password, String department, String major, int grade) {
-        super(name, age, birthday, idenity, username, password);
+    public Reader(User user, String department, String major, int grade) {
+        super(user);
         this.department = department;
         this.major = major;
         this.grade = grade;
     }
 
+    public Reader(String name, int age, Date birthday, String idenity, String username, String password, boolean isOnline, String department, String major, int grade) {
+        super(name, age, birthday, idenity, username, password, isOnline);
+        this.department = department;
+        this.major = major;
+        this.grade = grade;
+    }
 
     public String getDepartment() {
         return department;

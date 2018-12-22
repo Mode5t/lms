@@ -26,6 +26,12 @@ public interface UserMapper {
     @Select("select * from user")
     public List<User> findAll();
 
+    @Select("select * from user where idenity=#{idenity}")
+    public User findById(@Param("idenity") String idenity);
+
+    @Select("select * from user where isOnline=1")
+    public List<User> findOnline();
+
     @Update("update user set password=#{password},name=#{name},age=#{age},birthday=#{birthday},idenity=#{idenity},isOnline=#{isOnline} where username=#{username}")
     public boolean update(User user);
 

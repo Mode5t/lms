@@ -28,5 +28,4 @@ public interface ReaderMapper {
     @Update("update reader set department=#{department},major=#{major},grade=#{grade} where username=#{username}")
     boolean updateByUsername(Reader reader);
 
-
 }

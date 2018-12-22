@@ -21,7 +21,7 @@ public class ReaderMapperTests implements MapperTemplate {
     @Autowired
     private UserMapper mapper;
 
-    private Reader reader = new Reader("a", 1, new Date(), "id", "user", "pass", "depart", "major", 2);
+    private Reader reader = new Reader("name", 1, new Date(), "id", "username", "pass", false, "depart", "major", 1);
 
 
     @Test

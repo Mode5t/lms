@@ -11,6 +11,13 @@ public class User extends Human {
     public User() {
     }
 
+    public User(User user) {
+        super(user);
+        this.username = user.username;
+        this.password = user.password;
+        this.isOnline = user.isOnline;
+    }
+
     public User(String name, int age, Date birthday, String idenity, String username, String password, boolean isOnline) {
         super(name, age, birthday, idenity);
         this.username = username;

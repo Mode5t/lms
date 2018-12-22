@@ -1,4 +1,4 @@
-package cn.chy.lms.dao;
+package cn.chy.lms.controller;
 
 import cn.chy.lms.bean.book.Book;
 import cn.chy.lms.bean.book.BookInstance;
@@ -6,10 +6,14 @@ import cn.chy.lms.bean.record.BookRecord;
 import cn.chy.lms.mapper.book.BookInstanceMapper;
 import cn.chy.lms.mapper.book.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-public class BookDao {
+@RestController
+@RequestMapping(value = "/book")
+public class BookController {
 
     @Autowired
     private BookMapper bookMapper;
@@ -17,26 +21,25 @@ public class BookDao {
     @Autowired
     private BookInstanceMapper bookInstanceMapper;
 
-    public BookDao() {
 
+    //图书数据库的初始化
+    public boolean init() {
+        boolean result = true;
+        if (!bookMapper.createTable())
+            result = false;
+        if (!bookInstanceMapper.createTable())
+            result = false;
+        return result;
     }
 
-    public BookMapper getBookMapper() {
-        return bookMapper;
+    public boolean drop() {
+        boolean result = true;
+        if (!bookMapper.dropTable())
+            result = false;
+        if (!bookInstanceMapper.dropTable())
+            result = false;
+        return result;
     }
-
-    public void setBookMapper(BookMapper bookMapper) {
-        this.bookMapper = bookMapper;
-    }
-
-    public BookInstanceMapper getBookInstanceMapper() {
-        return bookInstanceMapper;
-    }
-
-    public void setBookInstanceMapper(BookInstanceMapper bookInstanceMapper) {
-        this.bookInstanceMapper = bookInstanceMapper;
-    }
-
 
     //通过isbn找到这本书对应的所有实例
     public BookRecord findByIsbn(String isbn) {
@@ -102,4 +105,19 @@ public class BookDao {
         return bookInstanceMapper.update(bookInstance);
     }
 
+    public BookMapper getBookMapper() {
+        return bookMapper;
+    }
+
+    public void setBookMapper(BookMapper bookMapper) {
+        this.bookMapper = bookMapper;
+    }
+
+    public BookInstanceMapper getBookInstanceMapper() {
+        return bookInstanceMapper;
+    }
+
+    public void setBookInstanceMapper(BookInstanceMapper bookInstanceMapper) {
+        this.bookInstanceMapper = bookInstanceMapper;
+    }
 }

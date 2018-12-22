@@ -13,6 +13,13 @@ public class Human {
 
     }
 
+    public Human(Human human) {
+        this.name = human.name;
+        this.age = human.age;
+        this.birthday = human.birthday;
+        this.idenity = human.idenity;
+    }
+
     public Human(String name, int age, Date birthday, String idenity) {
         this.name = name;
         this.age = age;
