@@ -1,9 +1,10 @@
 package cn.chy.lms.bean.user;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class User extends Human {
+public class User extends Human implements Serializable {
     private String username;
     private String password;
     private boolean isOnline;

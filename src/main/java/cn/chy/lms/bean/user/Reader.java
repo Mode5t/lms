@@ -1,11 +1,12 @@
 package cn.chy.lms.bean.user;
 
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 
-public class Reader extends User {
+public class Reader extends User implements Serializable {
     private String department;//院系
     private String major;//专业
     private int grade;//年级

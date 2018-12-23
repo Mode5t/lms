@@ -1,9 +1,10 @@
 package cn.chy.lms.bean.user;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Human {
+public class Human implements Serializable {
     private String name;//名字
     private int age;//年龄
     private Date birthday;//生日
@@ -74,4 +75,5 @@ public class Human {
     public int hashCode() {
         return Objects.hash(name, age, birthday, idenity);
     }
+
 }

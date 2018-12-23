@@ -3,10 +3,11 @@ package cn.chy.lms.bean.record;
 import cn.chy.lms.bean.book.Book;
 import cn.chy.lms.bean.book.BookInstance;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class BookRecord {
+public class BookRecord implements Serializable {
     private Book book;
     private List<BookInstance> bookInstances;
 

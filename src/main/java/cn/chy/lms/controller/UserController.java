@@ -7,11 +7,17 @@ import cn.chy.lms.mapper.user.AdminMapper;
 import cn.chy.lms.mapper.user.ReaderMapper;
 import cn.chy.lms.mapper.user.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import static cn.chy.lms.util.ModelAndViewUtils.jump;
+import static cn.chy.lms.util.ModelAndViewUtils.result;
+
 
 @RestController
 @RequestMapping(value = "/user")
@@ -25,10 +31,135 @@ public class UserController {
     @Autowired
     private AdminMapper adminMapper;
 
-    //功能
+    //具体web服务
+    @RequestMapping("/init")
+    public ModelAndView init() {
+        if (initTable())
+            return result("用户数据表初始成功!");
+        else
+            return result("用户数据表初始化失败,尝试重置数据库!");
+    }
+
+    @RequestMapping("/drop")
+    public ModelAndView drop() {
+        if (dropTable())
+            return result("用户数据表删除");
+        else
+            return result("数据表删除失败");
+    }
+
+    @RequestMapping(value = "/addReader", method = RequestMethod.POST)
+    public ModelAndView addReader(@RequestBody Map<String, Object> params) {
+        String department = (String) params.get("department");
+        String major = (String) params.get("major");
+        int grade = (int) params.get("grade");
+        Reader reader = new Reader(getUser(params, false), department, major, grade);
+        if (add(reader))
+            return result("读者添加成功");
+        else
+            return result("读者添加失败");
+    }
+
+    @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
+    public ModelAndView addAdmin(@RequestBody Map<String, Object> params) {
+        Administrator admin = new Administrator(getUser(params, false));
+        if (add(admin))
+            return result("管理员添加成功");
+        else
+            return result("管理员添加失败");
+    }
 
 
-    public boolean init() {
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+    public ModelAndView delete(@RequestParam("username") String username) {
+        //先检验是否有该用户
+        User user = userMapper.findByUsername(username);
+        if (user == null)
+            return result("用户名不存在");
+        else if (delete(user))
+            return result("用户删除成功");
+        else
+            return result("用户删除失败,是否有未还书籍");
+    }
+
+    @RequestMapping(value = "/updateReader", method = RequestMethod.POST)
+    public ModelAndView updateReader(@RequestBody Map<String, Object> params, HttpSession session) {
+        String department = (String) params.get("department");
+        String major = (String) params.get("major");
+        int grade = (int) params.get("grade");
+        Reader reader = new Reader(getUser(params, isReader(session.getAttribute("user"))), department, major, grade);
+        if (update(reader)) {
+            if (isReader(session.getAttribute("user")))
+                session.setAttribute("user", reader);
+            return result("信息更新成功");
+        } else
+            return result("信息更新失败");
+    }
+
+    public boolean isReader(Object user) {
+        if (user instanceof Reader)
+            return true;
+        return false;
+    }
+
+    //修改用户名
+    @RequestMapping(value = "/updateUsername", method = RequestMethod.GET)
+    public ModelAndView updateUsername(@RequestParam("username") String username, @RequestParam("newUsername") String newUsername, HttpSession session) {
+        User user = userMapper.findByUsername(newUsername);
+        if (user == null) {
+            userMapper.updateUsername(newUsername, username);
+            User online = (User) session.getAttribute("user");
+            if (isReader(online))
+                online.setUsername(newUsername);
+            return result("用户名更新成功");
+        } else {
+            return result("用户名已存在");
+        }
+    }
+
+    //查找一个人用户的信息
+    @RequestMapping(value = "findByUsername")
+    public ModelAndView findByUsername(@RequestParam("username") String username) {
+        User user = userMapper.findByUsername(username);
+        Reader reader = readerMapper.findByUsername(username);
+        if (user == null)
+            return result("用户不存在");
+        else {
+            ModelAndView modelAndView = new ModelAndView("userInfo");
+            if (reader == null) {
+                modelAndView.addObject("idenity", "管理员");
+                modelAndView.addObject("user", user);
+            } else {
+                modelAndView.addObject("idenity", "读者");
+                modelAndView.addObject("reader", reader);
+            }
+            return modelAndView;
+        }
+    }
+
+    //在管理处进行账号找回
+    @RequestMapping(value = "findByIdenity", method = RequestMethod.POST)
+    public ModelAndView findById(String idenity) {
+        User user = userMapper.findById(idenity);
+        if (user != null) {
+            return jump("userInfo", "user", user);
+        }
+        return result("无对应ID的账号");
+    }
+
+
+    public User getUser(Map<String, Object> params, boolean isOnline) {
+        String name = (String) params.get("name");
+        int age = (int) params.get("age");
+        Date birthday = (Date) params.get("birthday");
+        String idenity = (String) params.get("idenity");
+        String username = (String) params.get("username");
+        String password = (String) params.get("password");
+        return new User(name, age, birthday, idenity, username, password, false);
+    }
+
+
+    public boolean initTable() {
         boolean result = true;
         //个表创建
         result = result && userMapper.createTable();
@@ -45,7 +176,7 @@ public class UserController {
         return result;
     }
 
-    public boolean drop() {
+    public boolean dropTable() {
         boolean result = true;
         result = result && adminMapper.dropTable();
         result = result && readerMapper.dropTable();
@@ -64,18 +195,8 @@ public class UserController {
         return adminMapper.add(administrator);
     }
 
-    public boolean delete(Reader reader) {
-        boolean result = true;
-        result = result && readerMapper.delete(reader.getUsername());
-        result = result && userMapper.delete(reader.getUsername());
-        return result;
-    }
-
-    public boolean delete(Administrator administrator) {
-        boolean result = true;
-        result = result && readerMapper.delete(administrator.getUsername());
-        result = result && userMapper.delete(administrator.getUsername());
-        return result;
+    public boolean delete(User user) {
+        return userMapper.delete(user.getUsername());
     }
 
     public boolean update(Reader reader) {

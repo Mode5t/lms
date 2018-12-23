@@ -1,8 +1,9 @@
 package cn.chy.lms.bean.user;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Administrator extends User {
+public class Administrator extends User implements Serializable {
 
     //管理员的功能
 

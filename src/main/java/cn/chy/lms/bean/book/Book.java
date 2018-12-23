@@ -1,9 +1,10 @@
 package cn.chy.lms.bean.book;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Book {
+public class Book implements Serializable {
     private String isbn;//图书编号
     private String name;//书名
     private String author;//作者
