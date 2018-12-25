@@ -43,9 +43,9 @@ public class UserController {
     @RequestMapping("/drop")
     public ModelAndView drop() {
         if (dropTable())
-            return result("用户数据表删除");
+            return result("用户数据表删除成功");
         else
-            return result("数据表删除失败");
+            return result("用户数据表删除失败");
     }
 
     @RequestMapping(value = "/addReader", method = RequestMethod.POST)

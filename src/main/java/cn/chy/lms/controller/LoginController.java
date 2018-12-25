@@ -40,10 +40,10 @@ public class LoginController {
                 url = "adminIndex";
             }
             session.setAttribute("user", user);
+            user.setOnline(true);
+            userMapper.update(user);
             return ModelAndViewUtils.jump(url);
         }
         return ModelAndViewUtils.result("用户名不存在或密码错误");
     }
-
-
 }

@@ -29,4 +29,7 @@ public interface BookMapper {
     @Select("select * from book")
     public List<Book> findAll();
 
+    @Select("select * from book where name like '%${name}%'")
+    public List<Book> findBooks(@Param("name") String name);
+
 }
