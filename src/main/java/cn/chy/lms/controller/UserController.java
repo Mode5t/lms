@@ -7,10 +7,15 @@ import cn.chy.lms.mapper.user.AdminMapper;
 import cn.chy.lms.mapper.user.ReaderMapper;
 import cn.chy.lms.mapper.user.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +50,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addReader", method = RequestMethod.POST)
-    public ModelAndView addReader(@RequestBody Map<String, Object> params) {
-        String department = (String) params.get("department");
-        String major = (String) params.get("major");
-        int grade = (int) params.get("grade");
-        Reader reader = new Reader(getUser(params, false), department, major, grade);
+    public ModelAndView addReader(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String birthday, @RequestParam String department, @RequestParam String major, @RequestParam String grade, @RequestParam String idenity) {
+        Reader reader = null;
+        try {
+            reader = new Reader(name, parseDate(birthday), idenity, username, password, false, department, major, Integer.parseInt(grade));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (add(reader))
             return result("读者添加成功");
         else
@@ -57,8 +64,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
-    public ModelAndView addAdmin(@RequestBody Map<String, Object> params) {
-        Administrator admin = new Administrator(getUser(params, false));
+    public ModelAndView addAdmin(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String birthday, @RequestParam String idenity) {
+        Administrator admin = null;
+        try {
+            admin = new Administrator(name, parseDate(birthday), idenity, username, password, false);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (add(admin))
             return result("管理员添加成功");
         else
@@ -79,11 +91,19 @@ public class UserController {
     }
 
     @RequestMapping(value = "/updateReader", method = RequestMethod.POST)
-    public ModelAndView updateReader(@RequestBody Map<String, Object> params, HttpSession session) {
-        String department = (String) params.get("department");
-        String major = (String) params.get("major");
-        int grade = (int) params.get("grade");
-        Reader reader = new Reader(getUser(params, isReader(session.getAttribute("user"))), department, major, grade);
+    public ModelAndView updateReader(@RequestParam(required = false) String username, @RequestParam(required = false) String password, @RequestParam(required = false) String name, @RequestParam(required = false) String birthday, @RequestParam(required = false) String idenity, @RequestParam(required = false) String department, @RequestParam(required = false) String major, @RequestParam(required = false) String grade, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        Reader reader;
+        if (isReader(user)) {
+            reader = (Reader) user;
+        } else {
+            reader = readerMapper.findByUsername(username);
+        }
+        try {
+            reader.update(name, parseDate(birthday), idenity, username, password, true, department, major, Integer.parseInt(grade));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (update(reader)) {
             if (isReader(session.getAttribute("user")))
                 session.setAttribute("user", reader);
@@ -93,11 +113,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "/updateAdmin", method = RequestMethod.POST)
-    public ModelAndView updateAdmin(@RequestBody Map<String, Object> params, HttpSession session) {
-        Administrator administrator = new Administrator(getUser(params, true));
+    public ModelAndView updateAdmin(@RequestParam(required = false) String username, @RequestParam(required = false) String password, @RequestParam(required = false) String name, @RequestParam(required = false) String birthday, @RequestParam(required = false) String idenity, HttpSession session) {
+        Administrator administrator = (Administrator) session.getAttribute("user");
+        try {
+            administrator.update(name, parseDate(birthday), idenity, username, password, true);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         session.setAttribute("user", administrator);
         userMapper.update(administrator);
-        return result("信息修改成功");
+        return jump("admin/adminInfo");
     }
 
     public boolean isReader(Object user) {
@@ -107,6 +132,10 @@ public class UserController {
     }
     //修改用户名
 
+    public Date parseDate(String date) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return simpleDateFormat.parse(date);
+    }
     @RequestMapping(value = "/updateUsername", method = RequestMethod.POST)
     public ModelAndView updateUsername(@RequestParam("username") String username, @RequestParam("newUsername") String newUsername, HttpSession session) {
         User user = userMapper.findByUsername(newUsername);

@@ -65,4 +65,18 @@ public class User extends Human implements Serializable {
     public int hashCode() {
         return Objects.hash(super.hashCode(), username, password, isOnline);
     }
+
+    public boolean isAdmin() {
+        return this instanceof Administrator;
+    }
+
+    public void update(String name, Date birthday, String idenity, String username, String password, Boolean isOnline) {
+        update(name, birthday, idenity);
+        if (username != null)
+            setUsername(username);
+        if (password != null)
+            setPassword(password);
+        if (isOnline != null)
+            setOnline(isOnline);
+    }
 }

@@ -1,14 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- 用户信息修改 -->
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<form method="post" action="/user/updateAdmin">
-    名字:<input type="text" name="name">
-
+<div th:if="${session.user}" th:object="${session.user}">
+    <form method="post" action="/user/updateAdmin" id="update_data">
+        <div>
+            个人信息<br>
+            <label>
+                名&emsp;字:
+                <input type="text" name="name" th:value="*{name}" required="required">
+            </label><br>
+            <label>
+                生&emsp;日:
+                <input type="date" name="birthday" th:value="*{getFormatBirthday('yyyy-MM-dd')}" required="required">
+            </label><br>
+            <label>
+                身份证:
+                <input type="text" name="idenity" th:value="*{idenity}" required="required">
+            </label><br>
+        </div>
+        <input type="submit" value="修改"><br>
+    </form>
+</div>
+<span th:unless="${session.user}" th:text="非法访问"></span>
 </form>
 </body>
 </html>

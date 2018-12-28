@@ -1,6 +1,7 @@
 package cn.chy.lms.bean.user;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -50,6 +51,20 @@ public class Human implements Serializable {
         this.idenity = idenity;
     }
 
+    public String getFormatBirthday(String pattern) {
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return format.format(birthday);
+
+    }
+
+    public void update(String name, Date birthday, String idenity) {
+        if (name != null)
+            setName(name);
+        if (birthday != null)
+            setBirthday(birthday);
+        if (idenity != null)
+            setIdenity(idenity);
+    }
 
     @Override
     public boolean equals(Object o) {

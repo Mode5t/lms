@@ -18,4 +18,8 @@ public class Administrator extends User implements Serializable {
     public Administrator(String name, Date birthday, String idenity, String username, String password, boolean isOnline) {
         super(name, birthday, idenity, username, password, isOnline);
     }
+
+    public void update(String name, Date birthday, String idenity, String username, String password, boolean isOnline) {
+        super.update(name, birthday, idenity, username, password, isOnline);
+    }
 }

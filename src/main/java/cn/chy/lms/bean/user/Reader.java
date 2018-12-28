@@ -75,6 +75,19 @@ public class Reader extends User implements Serializable {
                 Objects.equals(major, reader.major);
     }
 
+    public void update(String name, Date birthday, String idenity, String username, String password, boolean isOnline, String department, String major, Integer grade) {
+        update(name, birthday, idenity, username, password, isOnline);
+        if (department == null) {
+            setDepartment(department);
+        }
+        if (grade != null) {
+            setGrade(grade);
+        }
+        if (major == null) {
+            setMajor(major);
+        }
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), department, major, grade);
