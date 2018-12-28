@@ -18,7 +18,7 @@ public class UserMapperTests implements MapperTemplate {
     @Autowired
     private UserMapper userMapper;
 
-    private User user = new User("name", 1, new Date(), "id", "user", "pass", false);
+    private User user = new User("name", new Date(), "id", "user", "pass", false);
 
     @Test
     public void contextLoads() {
@@ -64,7 +64,6 @@ public class UserMapperTests implements MapperTemplate {
     @Test
     @Override
     public void update() {
-        user.setAge(2);
         userMapper.update(user);
     }
 

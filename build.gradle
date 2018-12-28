@@ -37,5 +37,6 @@ dependencies {
     runtimeOnly('mysql:mysql-connector-java')
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    implementation("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
 }

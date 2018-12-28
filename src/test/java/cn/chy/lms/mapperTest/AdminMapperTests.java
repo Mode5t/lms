@@ -17,7 +17,7 @@ public class AdminMapperTests implements MapperTemplate {
     @Autowired
     private AdminMapper adminMapper;
 
-    private Administrator administrator = new Administrator("name", 2, new Date(), "id", "user", "pass", false);
+    private Administrator administrator = new Administrator("name", new Date(), "id", "user", "pass", false);
 
     @Test
     @Override

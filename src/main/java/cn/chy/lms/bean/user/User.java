@@ -19,8 +19,8 @@ public class User extends Human implements Serializable {
         this.isOnline = user.isOnline;
     }
 
-    public User(String name, int age, Date birthday, String idenity, String username, String password, boolean isOnline) {
-        super(name, age, birthday, idenity);
+    public User(String name, Date birthday, String idenity, String username, String password, boolean isOnline) {
+        super(name, birthday, idenity);
         this.username = username;
         this.password = password;
         this.isOnline = isOnline;

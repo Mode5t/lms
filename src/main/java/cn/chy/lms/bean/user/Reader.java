@@ -23,8 +23,8 @@ public class Reader extends User implements Serializable {
         this.grade = grade;
     }
 
-    public Reader(String name, int age, Date birthday, String idenity, String username, String password, boolean isOnline, String department, String major, int grade) {
-        super(name, age, birthday, idenity, username, password, isOnline);
+    public Reader(String name, Date birthday, String idenity, String username, String password, boolean isOnline, String department, String major, int grade) {
+        super(name, birthday, idenity, username, password, isOnline);
         this.department = department;
         this.major = major;
         this.grade = grade;

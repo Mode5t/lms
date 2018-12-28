@@ -32,16 +32,14 @@ public class BookController {
 
     @RequestMapping("/init")
     public ModelAndView init() {
-        if (initTable())
-            return result("图书表初始化成功");
-        return result("图书表初始化失败");
+        initTable();
+        return result("图书表初始化");
     }
 
     @RequestMapping("/drop")
     public ModelAndView drop() {
-        if (dropTable())
-            return result("图书表删除成功");
-        return result("图书表删除失败");
+        dropTable();
+        return result("图书表删除");
     }
 
     @RequestMapping(value = "/addBook", method = RequestMethod.POST)
@@ -169,22 +167,14 @@ public class BookController {
     }
 
     //图书数据库的初始化
-    public boolean initTable() {
-        boolean result = true;
-        if (!bookMapper.createTable())
-            result = false;
-        if (!bookInstanceMapper.createTable())
-            result = false;
-        return result;
+    public void initTable() {
+        bookMapper.createTable();
+        bookInstanceMapper.createTable();
     }
 
-    public boolean dropTable() {
-        boolean result = true;
-        if (!bookMapper.dropTable())
-            result = false;
-        if (!bookInstanceMapper.dropTable())
-            result = false;
-        return result;
+    public void dropTable() {
+        bookInstanceMapper.dropTable();
+        bookMapper.dropTable();
     }
 
     //添加新书

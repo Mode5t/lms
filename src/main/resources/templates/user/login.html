@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登入</title>
+</head>
+<body>
+
+<form method="post" action="/login/check">
+    用户名:<label>
+    <input type="text" name="username" required="required">
+</label><br>
+    密&emsp;码:<label>
+    <input type="password" name="password" required="required"/>
+</label><br>
+    类&emsp;型:<label>
+    <input type="radio" name="type" value="读者" checked="true">
+</label>读者
+    <label>
+        <input type="radio" name="type" value="管理员">
+    </label>管理员<br>
+    <input type="submit" value="登入">
+
+
+</form>
+</body>
+</html>

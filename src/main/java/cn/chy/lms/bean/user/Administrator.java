@@ -15,7 +15,7 @@ public class Administrator extends User implements Serializable {
         super(user);
     }
 
-    public Administrator(String name, int age, Date birthday, String idenity, String username, String password, boolean isOnline) {
-        super(name, age, birthday, idenity, username, password, isOnline);
+    public Administrator(String name, Date birthday, String idenity, String username, String password, boolean isOnline) {
+        super(name, birthday, idenity, username, password, isOnline);
     }
 }

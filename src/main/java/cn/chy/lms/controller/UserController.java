@@ -34,18 +34,14 @@ public class UserController {
     //具体web服务
     @RequestMapping("/init")
     public ModelAndView init() {
-        if (initTable())
-            return result("用户数据表初始成功!");
-        else
-            return result("用户数据表初始化失败,尝试重置数据库!");
+        initTable();
+        return result("创建表");
     }
 
     @RequestMapping("/drop")
     public ModelAndView drop() {
-        if (dropTable())
-            return result("用户数据表删除成功");
-        else
-            return result("用户数据表删除失败");
+        dropTable();
+        return result("删除表");
     }
 
     @RequestMapping(value = "/addReader", method = RequestMethod.POST)
@@ -96,14 +92,22 @@ public class UserController {
             return result("信息更新失败");
     }
 
+    @RequestMapping(value = "/updateAdmin", method = RequestMethod.POST)
+    public ModelAndView updateAdmin(@RequestBody Map<String, Object> params, HttpSession session) {
+        Administrator administrator = new Administrator(getUser(params, true));
+        session.setAttribute("user", administrator);
+        userMapper.update(administrator);
+        return result("信息修改成功");
+    }
+
     public boolean isReader(Object user) {
         if (user instanceof Reader)
             return true;
         return false;
     }
-
     //修改用户名
-    @RequestMapping(value = "/updateUsername", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/updateUsername", method = RequestMethod.POST)
     public ModelAndView updateUsername(@RequestParam("username") String username, @RequestParam("newUsername") String newUsername, HttpSession session) {
         User user = userMapper.findByUsername(newUsername);
         if (user == null) {
@@ -150,38 +154,33 @@ public class UserController {
 
     public User getUser(Map<String, Object> params, boolean isOnline) {
         String name = (String) params.get("name");
-        int age = (int) params.get("age");
         Date birthday = (Date) params.get("birthday");
         String idenity = (String) params.get("idenity");
         String username = (String) params.get("username");
         String password = (String) params.get("password");
-        return new User(name, age, birthday, idenity, username, password, false);
+        return new User(name, birthday, idenity, username, password, false);
     }
 
 
-    public boolean initTable() {
-        boolean result = true;
+    public void initTable() {
         //个表创建
-        result = result && userMapper.createTable();
-        result = result && readerMapper.createTable();
-        result = result && adminMapper.createTable();
+        userMapper.createTable();
+        readerMapper.createTable();
+        adminMapper.createTable();
 
         //初始用户添加
-        User user = new User("libraryKeeper", 0, new Date(), "id", "libraryKeeper", "libraryKeeper", false);
-        result = result && userMapper.add(user);
+        User user = new User("libraryKeeper", new Date(), "id", "libraryKeeper", "libraryKeeper", false);
+        userMapper.add(user);
         Reader reader = new Reader(user, "library", "null", 0);
-        result = result && readerMapper.add(reader);
+        readerMapper.add(reader);
         Administrator administrator = new Administrator(user);
-        result = result && adminMapper.add(administrator);
-        return result;
+        adminMapper.add(administrator);
     }
 
-    public boolean dropTable() {
-        boolean result = true;
-        result = result && adminMapper.dropTable();
-        result = result && readerMapper.dropTable();
-        result = result && userMapper.dropTable();
-        return result;
+    public void dropTable() {
+        adminMapper.dropTable();
+        readerMapper.dropTable();
+        userMapper.dropTable();
     }
 
 
