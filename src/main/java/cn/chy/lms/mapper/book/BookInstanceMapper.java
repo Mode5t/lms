@@ -32,4 +32,6 @@ public interface BookInstanceMapper {
     @Select("select count(*) from bookInstance where isbn=#{isbn}")
     public int getBookCount(@Param("isbn") String isbn);
 
+    @Select("select * from bookinstance where username=#{username}")
+    public List<BookInstance> getBookReaderBorrowed(@Param("username") String username);
 }

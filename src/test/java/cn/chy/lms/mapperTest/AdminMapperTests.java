@@ -58,7 +58,7 @@ public class AdminMapperTests implements MapperTemplate {
     @Test
     @Override
     public void update() {
-        administrator.setIdenity("new id");
+        administrator.setIdentity("new id");
     }
 
 }

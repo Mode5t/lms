@@ -38,8 +38,7 @@ dependencies {
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     implementation("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.8'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
+
+
 
 }

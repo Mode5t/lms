@@ -7,14 +7,18 @@ import cn.chy.lms.bean.user.User;
 import cn.chy.lms.mapper.book.BookInstanceMapper;
 import cn.chy.lms.mapper.book.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static cn.chy.lms.util.ModelAndViewUtils.jump;
 import static cn.chy.lms.util.ModelAndViewUtils.result;
@@ -43,34 +47,33 @@ public class BookController {
     }
 
     @RequestMapping(value = "/addBook", method = RequestMethod.POST)
-    public ModelAndView addBook(@RequestBody Map<String, Object> params) {
-        BookRecord bookRecord = getBookRecord(params);
+    public ModelAndView addBook(@RequestParam String isbn, @RequestParam String name, @RequestParam String author, @RequestParam String type, @RequestParam String publisher, @RequestParam String publicationDate, @RequestParam String price, @RequestParam String number) {
+        BookRecord bookRecord = getBookRecord(isbn, name, author, type, publisher, publicationDate, price, number);
         if (addBook(bookRecord))
             return result("图书添加成功");
         return result("图书添加失败");
     }
 
-    public BookRecord getBookRecord(Map<String, Object> params) {
-        String isbn = (String) params.get("isbn");
-        int sum = (int) params.get("sum");
-        Book book = getBook(params);
+    public Date parseDate(String date) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return simpleDateFormat.parse(date);
+    }
+
+    public BookRecord getBookRecord(String isbn, String name, String author, String type, String publisher, String publicationDate, String price, String number) {
+        Book book = null;
+        int sum = 0;
+        try {
+            book = new Book(isbn, name, author, type, publisher, parseDate(publicationDate), Double.parseDouble(price));
+            sum = Integer.parseInt(number);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         List<BookInstance> bookInstances = new ArrayList<>();
         int current_id = bookInstanceMapper.getBookCount(isbn);
         for (int i = 1; i <= sum; i++) {
             bookInstances.add(new BookInstance(current_id + i, isbn, false, new Date(), new Date(), "library"));
         }
         return new BookRecord(book, bookInstances);
-    }
-
-    public Book getBook(Map<String, Object> params) {
-        String isbn = (String) params.get("isbn");
-        String name = (String) params.get("name");
-        String author = (String) params.get("author");
-        String type = (String) params.get("type");
-        String publisher = (String) params.get("publisher");
-        Date publicationDate = (Date) params.get("publicationDate");
-        double price = (double) params.get("price");
-        return new Book(isbn, name, author, type, publisher, publicationDate, price);
     }
 
     @RequestMapping(value = "/deleteBookInstance", method = RequestMethod.POST)
@@ -96,35 +99,42 @@ public class BookController {
     }
 
     @RequestMapping(value = "/updateBook", method = RequestMethod.POST)
-    public ModelAndView updateBook(@RequestBody Map<String, Object> params) {
-        Book book = getBook(params);
-        if (bookMapper.update(book))
-            return result("信息更新成功");
-        return result("图书不存在");
+    public ModelAndView updateBook(@RequestParam String isbn, @RequestParam String name, @RequestParam String author, @RequestParam String type, @RequestParam String publisher, @RequestParam String publicationDate, @RequestParam String price) {
+        Book book = bookMapper.findByIsbn(isbn);
+        if (book == null) {
+            return result("图书不存在");
+        }
+        try {
+            book.setName(name);
+            book.setAuthor(author);
+            book.setPrice(Double.parseDouble(price));
+            book.setPublicationDate(parseDate(publicationDate));
+            book.setType(type);
+            bookMapper.update(book);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result("信息更新成功");
     }
 
-    @RequestMapping(value = "/updateBookInstance", method = RequestMethod.POST)
-    public ModelAndView updateBookInstance(@RequestBody Map<String, Object> params) {
-        BookInstance bookInstance = getBookInstance(params);
-        if (updateBookInstance(bookInstance))
-            return result("书本更新成功");
-        return result("书本不存在");
-    }
-
-    @RequestMapping(value = "/borrowBook", method = RequestMethod.POST)
-    public ModelAndView borrowBook(@RequestParam int id, @RequestParam String isbn, @RequestParam String username, HttpSession session) {
+    @RequestMapping("/borrowBook")
+    public ModelAndView borrowBook(@RequestParam int id, @RequestParam String isbn, @RequestParam(required = false) String username, HttpSession session) {
         BookInstance bookInstance = bookInstanceMapper.findById(id, isbn);
         if (bookInstance != null) {
             if (username == null)
                 username = ((User) session.getAttribute("user")).getUsername();
             bookInstance.borrowBook(username);
             bookInstanceMapper.update(bookInstance);
-            return result("借书成功");
+            List<Book> books = (List<Book>) session.getAttribute("borrowedBooks");
+            List<BookInstance> bookInstances = (List<BookInstance>) session.getAttribute("borrowedBookInstances");
+            bookInstances.add(bookInstance);
+            books.add(bookMapper.findByIsbn(bookInstance.getIsbn()));
+            return jump("reader/readerIndex");
         }
         return result("书不存在");
     }
 
-    @RequestMapping(value = "/returnBook", method = RequestMethod.POST)
+    @RequestMapping("/returnBook")
     public ModelAndView returnBook(@RequestParam int id, @RequestParam String isbn, @RequestParam String username, HttpSession session) {
         BookInstance bookInstance = bookInstanceMapper.findById(id, isbn);
         if (bookInstance != null) {
@@ -143,31 +153,21 @@ public class BookController {
             return result("书不存在");
         }
         List<BookInstance> bookInstance = bookInstanceMapper.findByIsbn(isbn);
-        return jump("对一本书的查找", "book", book);
+        return jump("book/bookInfo", "bookRecord", new BookRecord(book, bookInstance));
     }
 
     @RequestMapping(value = "findBooks", method = RequestMethod.GET)
-    public ModelAndView findBooks(@RequestParam String name) {
-        List<Book> books = bookMapper.findBooks(name);
-        return jump("模糊查找的页面", new String[]{"keyword", "books"}, new Object[]{name, books});
+    public ModelAndView findBooks(@RequestParam String keyword) {
+        List<Book> books = bookMapper.findBooks(keyword);
+        return jump("book/bookList", new String[]{"keyword", "books"}, new Object[]{keyword, books});
     }
 
-    public BookInstance getBookInstance(Map<String, Object> params) {
-        int id = (int) params.get("id");
-        String isbn = (String) params.get("isbn");
-        boolean isBorrowed = (boolean) params.get("isBorrowed");
-        Date borrowDate = (Date) params.get("borrowDate");
-        Date returnDate = (Date) params.get("returnDate");
-        String username = (String) params.get("username");
-        return new BookInstance(id, isbn, isBorrowed, borrowDate, returnDate, username);
-    }
-
-    public boolean isOnLibrary(int id, String isbn) {
+    private boolean isOnLibrary(int id, String isbn) {
         return bookInstanceMapper.findById(id, isbn).getUsername().equals("library");
     }
 
     //图书数据库的初始化
-    public void initTable() {
+    private void initTable() {
         bookMapper.createTable();
         bookInstanceMapper.createTable();
     }
@@ -178,22 +178,19 @@ public class BookController {
     }
 
     //添加新书
-    public boolean addBook(BookRecord bookRecord) {
+    private boolean addBook(BookRecord bookRecord) {
         return addBook(bookRecord.getBook(), bookRecord.getBookInstances());
     }
 
-    public boolean addBook(Book book, List<BookInstance> bookInstances) {
+    private boolean addBook(Book book, List<BookInstance> bookInstances) {
         boolean result = true;
         if (!bookMapper.add(book))
             result = false;
-        if (!addBookInstances(bookInstances))
-            result = false;
-        else
-            result = true;
+        result = addBookInstances(bookInstances);
         return result;
     }
 
-    public boolean addBookInstances(List<BookInstance> bookInstances) {
+    private boolean addBookInstances(List<BookInstance> bookInstances) {
         for (BookInstance bookInstance : bookInstances) {
             if (!bookInstanceMapper.add(bookInstance))
                 return false;
@@ -211,7 +208,7 @@ public class BookController {
         return result;
     }
 
-    public boolean updateBookInstances(List<BookInstance> bookInstances) {
+    private boolean updateBookInstances(List<BookInstance> bookInstances) {
         for (BookInstance bookInstance : bookInstances) {
             if (!updateBookInstance(bookInstance))
                 return false;
@@ -219,7 +216,7 @@ public class BookController {
         return true;
     }
 
-    public boolean updateBookInstance(BookInstance bookInstance) {
+    private boolean updateBookInstance(BookInstance bookInstance) {
         return bookInstanceMapper.update(bookInstance);
     }
 

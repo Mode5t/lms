@@ -15,11 +15,11 @@ public class Administrator extends User implements Serializable {
         super(user);
     }
 
-    public Administrator(String name, Date birthday, String idenity, String username, String password, boolean isOnline) {
-        super(name, birthday, idenity, username, password, isOnline);
+    public Administrator(String name, Date birthday, String identity, String username, String password, boolean isOnline) {
+        super(name, birthday, identity, username, password, isOnline);
     }
 
-    public void update(String name, Date birthday, String idenity, String username, String password, boolean isOnline) {
-        super.update(name, birthday, idenity, username, password, isOnline);
+    public void update(String name, Date birthday, String identity, String username, String password, boolean isOnline) {
+        super.update(name, birthday, identity, username, password, isOnline);
     }
 }

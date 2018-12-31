@@ -23,8 +23,8 @@ public class Reader extends User implements Serializable {
         this.grade = grade;
     }
 
-    public Reader(String name, Date birthday, String idenity, String username, String password, boolean isOnline, String department, String major, int grade) {
-        super(name, birthday, idenity, username, password, isOnline);
+    public Reader(String name, Date birthday, String identity, String username, String password, boolean isOnline, String department, String major, int grade) {
+        super(name, birthday, identity, username, password, isOnline);
         this.department = department;
         this.major = major;
         this.grade = grade;
@@ -75,15 +75,15 @@ public class Reader extends User implements Serializable {
                 Objects.equals(major, reader.major);
     }
 
-    public void update(String name, Date birthday, String idenity, String username, String password, boolean isOnline, String department, String major, Integer grade) {
-        update(name, birthday, idenity, username, password, isOnline);
-        if (department == null) {
+    public void update(String name, Date birthday, String identity, String username, String password, boolean isOnline, String department, String major, Integer grade) {
+        update(name, birthday, identity, username, password, isOnline);
+        if (department != null) {
             setDepartment(department);
         }
         if (grade != null) {
             setGrade(grade);
         }
-        if (major == null) {
+        if (major != null) {
             setMajor(major);
         }
     }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>isbn</th>
+        <th>书名</th>
+        <th>作者</th>
+        <th>类型</th>
+        <th>出版商家</th>
+        <th>出版日期</th>
+        <th>价格</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book:${books}">
+        <th><a th:text="${book.isbn}" th:href="@{'/book/findBook?isbn='+${book.isbn}}"></a></th>
+        <th th:text="${book.name}"></th>
+        <th th:text="${book.author}"></th>
+        <th th:text="${book.type}"></th>
+        <th th:text="${book.publisher}"></th>
+        <th th:text="${book.getPublicationDateString()}"></th>
+        <th th:text="${book.price}"></th>
+    </tr>
+    </tbody>
+
+</table>
+
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 package cn.chy.lms.bean.book;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -23,6 +24,12 @@ public class BookInstance implements Serializable {
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
         this.username = username;
+    }
+
+
+    public String getBorrwoedDateString() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        return simpleDateFormat.format(borrowDate);
     }
 
     public void borrowBook(String username) {

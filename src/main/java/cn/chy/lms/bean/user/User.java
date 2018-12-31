@@ -19,8 +19,8 @@ public class User extends Human implements Serializable {
         this.isOnline = user.isOnline;
     }
 
-    public User(String name, Date birthday, String idenity, String username, String password, boolean isOnline) {
-        super(name, birthday, idenity);
+    public User(String name, Date birthday, String identity, String username, String password, boolean isOnline) {
+        super(name, birthday, identity);
         this.username = username;
         this.password = password;
         this.isOnline = isOnline;
@@ -70,8 +70,8 @@ public class User extends Human implements Serializable {
         return this instanceof Administrator;
     }
 
-    public void update(String name, Date birthday, String idenity, String username, String password, Boolean isOnline) {
-        update(name, birthday, idenity);
+    public void update(String name, Date birthday, String identity, String username, String password, Boolean isOnline) {
+        update(name, birthday, identity);
         if (username != null)
             setUsername(username);
         if (password != null)

@@ -5,47 +5,26 @@
     <meta charset="UTF-8">
     <title>读者信息</title>
 </head>
-<body>
-<div th:unless="${reader}" th:if="${session.user}" th:object="${session.user}">
-    <div>
-        个人信息<br>
-        名&emsp;字:<span th:text="*{name}"></span><br>
-        生&emsp;日:<span th:text="*{getFormatBirthday('yyyy年MM月dd日')}"></span><br>
-        身份证:<span th:text="*{idenity}"></span><br>
-        院&emsp;系:<span th:text="*{department}"></span><br>
-        专&emsp;业:<span th:text="*{major}"></span><br>
-        年&emsp;级:<span th:text="*{grade}"></span><br>
+<body th:fragment="info">
+<div>
+    <div th:if="${session.user}" th:object="${session.user}">
+        <div>
+            个人信息<br>
+            名&emsp;字:<span th:text="*{name}"></span><br>
+            生&emsp;日:<span th:text="*{getFormatBirthday('yyyy年MM月dd日')}"></span><br>
+            身份证:<span th:text="*{identity}"></span><br>
+            <div th:unless="${session.user.department}eq 'null'">院&emsp;系:<span th:text="*{department}"></span><br>
+            </div>
+            <div th:unless="${session.user.major} eq 'null'">专&emsp;业:<span th:text="*{major}"></span><br></div>
+            <div th:unless="${session.user.grade} eq '0'">年&emsp;级:<span th:text="*{grade}"></span><br></div>
+            <div>
+                账号信息<br>
+                用户名:<span th:text="*{username}"></span><br>
+                状&emsp;态:<span th:text="*{isOnline()}? '在线':'离线'"></span><br>
+            </div>
+        </div>
     </div>
-    <div>
-        账号信息<br>
-        用户名:<span th:text="*{username}"></span><br>
-        状&emsp;态:<span th:text="*{isOnline()}? '在线':'离线'"></span><br>
-    </div>
+    <span th:if="${reader}==null and ${session.user}==null" th:text="非法访问"></span>
 </div>
-
-<div th:if="${reader}" th:object="${reader}">
-    <div>
-        个人信息<br>
-        名&emsp;字:<span th:text="*{name}"></span><br>
-        生&emsp;日:<span th:text="*{getFormatBirthday('yyyy年MM月dd日')}"></span><br>
-        身份证:<span th:text="*{idenity}"></span><br>
-        院&emsp;系:<span th:text="*{department}"></span><br>
-        专&emsp;业:<span th:text="*{major}"></span><br>
-        年&emsp;级:<span th:text="*{grade}"></span><br>
-    </div>
-    <br>
-    <div>
-        账号信息<br>
-        用户名:<span th:text="*{username}"></span><br>
-        状&emsp;态:<span th:text="*{isOnline()}? '在线':'离线'"></span><br>
-    </div>
-</div>
-<span th:unless="${reader}" th:if="!${session.user}" th:text="非法访问"></span>
-
-<input type="button" value="修改数据" onclick="location.href='readerModify'"/>
-
-<script>
-
-</script>
 </body>
 </html>

@@ -6,6 +6,7 @@ import cn.chy.lms.bean.user.User;
 import cn.chy.lms.mapper.user.AdminMapper;
 import cn.chy.lms.mapper.user.ReaderMapper;
 import cn.chy.lms.mapper.user.UserMapper;
+import cn.chy.lms.util.ModelAndViewUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,10 +51,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addReader", method = RequestMethod.POST)
-    public ModelAndView addReader(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String birthday, @RequestParam String department, @RequestParam String major, @RequestParam String grade, @RequestParam String idenity) {
+    public ModelAndView addReader(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String birthday, @RequestParam(required = false) String department, @RequestParam(required = false) String major, @RequestParam(required = false) String grade, @RequestParam String identity) {
         Reader reader = null;
         try {
-            reader = new Reader(name, parseDate(birthday), idenity, username, password, false, department, major, Integer.parseInt(grade));
+            reader = new Reader(name, parseDate(birthday), identity, username, password, false, department == "" ? "null" : department, major.equals("") ? "null" : major, Integer.parseInt(grade.equals("") ? "0" : grade));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -64,16 +65,19 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
-    public ModelAndView addAdmin(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String birthday, @RequestParam String idenity) {
+    public ModelAndView addAdmin(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String birthday, @RequestParam String identity) {
         Administrator admin = null;
         try {
-            admin = new Administrator(name, parseDate(birthday), idenity, username, password, false);
+            admin = new Administrator(name, parseDate(birthday), identity, username, password, false);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (add(admin))
+        if (add(admin)) {
+            Reader reader = new Reader((User) admin, "null", "null", 0);
+            readerMapper.add(reader);
             return result("管理员添加成功");
-        else
+
+        } else
             return result("管理员添加失败");
     }
 
@@ -91,7 +95,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/updateReader", method = RequestMethod.POST)
-    public ModelAndView updateReader(@RequestParam(required = false) String username, @RequestParam(required = false) String password, @RequestParam(required = false) String name, @RequestParam(required = false) String birthday, @RequestParam(required = false) String idenity, @RequestParam(required = false) String department, @RequestParam(required = false) String major, @RequestParam(required = false) String grade, HttpSession session) {
+    public ModelAndView updateReader(@RequestParam(required = false) String username, @RequestParam(required = false) String password, @RequestParam(required = false) String name, @RequestParam(required = false) String birthday, @RequestParam(required = false) String identity, @RequestParam(required = false) String department, @RequestParam(required = false) String major, @RequestParam(required = false) String grade, HttpSession session) {
         User user = (User) session.getAttribute("user");
         Reader reader;
         if (isReader(user)) {
@@ -100,29 +104,55 @@ public class UserController {
             reader = readerMapper.findByUsername(username);
         }
         try {
-            reader.update(name, parseDate(birthday), idenity, username, password, true, department, major, Integer.parseInt(grade));
+            reader.update(name, parseDate(birthday), identity, username, password, true, department, major, Integer.parseInt(grade));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         if (update(reader)) {
             if (isReader(session.getAttribute("user")))
                 session.setAttribute("user", reader);
-            return result("信息更新成功");
+            return jump("reader/readerInfo");
         } else
-            return result("信息更新失败");
+            return jump("admin/adminIndex");
     }
 
     @RequestMapping(value = "/updateAdmin", method = RequestMethod.POST)
-    public ModelAndView updateAdmin(@RequestParam(required = false) String username, @RequestParam(required = false) String password, @RequestParam(required = false) String name, @RequestParam(required = false) String birthday, @RequestParam(required = false) String idenity, HttpSession session) {
+    public ModelAndView updateAdmin(@RequestParam(required = false) String username, @RequestParam(required = false) String password, @RequestParam(required = false) String name, @RequestParam(required = false) String birthday, @RequestParam(required = false) String identity, HttpSession session) {
         Administrator administrator = (Administrator) session.getAttribute("user");
         try {
-            administrator.update(name, parseDate(birthday), idenity, username, password, true);
+            administrator.update(name, parseDate(birthday), identity, username, password, true);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         session.setAttribute("user", administrator);
         userMapper.update(administrator);
         return jump("admin/adminInfo");
+    }
+
+    @RequestMapping(value = "/identityCheck", method = RequestMethod.POST)
+    public ModelAndView identityCheck(@RequestParam(required = false) String username, @RequestParam String name, @RequestParam String identity) {
+        User user;
+        if (username != "")
+            user = userMapper.findByUsername(username);
+        else
+            user = userMapper.findById(identity);
+        if (user != null && name.equals(user.getName()) && identity.equals(user.getIdentity()))
+            return ModelAndViewUtils.jump("user/passwordModify", "username", user.getUsername());
+        return ModelAndViewUtils.result("验证失败");
+    }
+
+    @RequestMapping(value = "/passwordModify", method = RequestMethod.POST)
+    public ModelAndView passwordModify(@RequestParam String username, @RequestParam String password, HttpSession session) {
+        User modifyUser = userMapper.findByUsername(username);
+        User user = (User) session.getAttribute("user");
+        modifyUser.setPassword(password);
+        userMapper.update(modifyUser);
+        if (user != null) {//不是找回密码,就跳转到对应菜单
+            if (isReader(user))
+                return jump("reader/readerIndex");
+            return jump("admin/adminIndex");
+        }
+        return result("修改成功");
     }
 
     public boolean isReader(Object user) {
@@ -136,6 +166,7 @@ public class UserController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return simpleDateFormat.parse(date);
     }
+
     @RequestMapping(value = "/updateUsername", method = RequestMethod.POST)
     public ModelAndView updateUsername(@RequestParam("username") String username, @RequestParam("newUsername") String newUsername, HttpSession session) {
         User user = userMapper.findByUsername(newUsername);
@@ -146,7 +177,7 @@ public class UserController {
                 online.setUsername(newUsername);
             return result("用户名更新成功");
         } else {
-            return result("用户名已存在");
+            return jump("user/usernameModify", new String[]{"isFreeUsername", "username"}, new String[]{"No", username});
         }
     }
 
@@ -160,10 +191,10 @@ public class UserController {
         else {
             ModelAndView modelAndView = new ModelAndView("userInfo");
             if (reader == null) {
-                modelAndView.addObject("idenity", "管理员");
+                modelAndView.addObject("identity", "管理员");
                 modelAndView.addObject("user", user);
             } else {
-                modelAndView.addObject("idenity", "读者");
+                modelAndView.addObject("identity", "读者");
                 modelAndView.addObject("reader", reader);
             }
             return modelAndView;
@@ -171,9 +202,9 @@ public class UserController {
     }
 
     //在管理处进行账号找回
-    @RequestMapping(value = "findByIdenity", method = RequestMethod.POST)
-    public ModelAndView findById(String idenity) {
-        User user = userMapper.findById(idenity);
+    @RequestMapping(value = "findByIdentity", method = RequestMethod.POST)
+    public ModelAndView findById(String identity) {
+        User user = userMapper.findById(identity);
         if (user != null) {
             return jump("userInfo", "user", user);
         }
@@ -184,10 +215,10 @@ public class UserController {
     public User getUser(Map<String, Object> params, boolean isOnline) {
         String name = (String) params.get("name");
         Date birthday = (Date) params.get("birthday");
-        String idenity = (String) params.get("idenity");
+        String identity = (String) params.get("identity");
         String username = (String) params.get("username");
         String password = (String) params.get("password");
-        return new User(name, birthday, idenity, username, password, false);
+        return new User(name, birthday, identity, username, password, false);
     }
 
 
@@ -242,8 +273,8 @@ public class UserController {
     //查
 
     //此处认为身份证为私有不公开的,用于修改用户信息时使用
-    public User findUserById(String idenity) {
-        return userMapper.findById(idenity);
+    public User findUserById(String identity) {
+        return userMapper.findById(identity);
     }
 
     public Reader findReaderByUsername(String username) {

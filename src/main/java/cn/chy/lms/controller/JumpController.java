@@ -14,4 +14,9 @@ public class JumpController {
     public ModelAndView jump(@RequestParam String url) {
         return ModelAndViewUtils.jump(url);
     }
+
+    @RequestMapping(value = "jumpWithUsername", method = RequestMethod.GET)
+    public ModelAndView jumpWithParam(@RequestParam String url, @RequestParam String username) {
+        return ModelAndViewUtils.jump(url, "username", username);
+    }
 }

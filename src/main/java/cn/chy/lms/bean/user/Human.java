@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Human implements Serializable {
     private String name;//名字
     private Date birthday;//生日
-    private String idenity;//身份证
+    private String identity;//身份证
 
     public Human() {
 
@@ -17,13 +17,13 @@ public class Human implements Serializable {
     public Human(Human human) {
         this.name = human.name;
         this.birthday = human.birthday;
-        this.idenity = human.idenity;
+        this.identity = human.identity;
     }
 
-    public Human(String name, Date birthday, String idenity) {
+    public Human(String name, Date birthday, String identity) {
         this.name = name;
         this.birthday = birthday;
-        this.idenity = idenity;
+        this.identity = identity;
     }
 
     public String getName() {
@@ -43,12 +43,12 @@ public class Human implements Serializable {
         this.birthday = birthday;
     }
 
-    public String getIdenity() {
-        return idenity;
+    public String getIdentity() {
+        return identity;
     }
 
-    public void setIdenity(String idenity) {
-        this.idenity = idenity;
+    public void setIdentity(String identity) {
+        this.identity = identity;
     }
 
     public String getFormatBirthday(String pattern) {
@@ -57,13 +57,13 @@ public class Human implements Serializable {
 
     }
 
-    public void update(String name, Date birthday, String idenity) {
+    public void update(String name, Date birthday, String identity) {
         if (name != null)
             setName(name);
         if (birthday != null)
             setBirthday(birthday);
-        if (idenity != null)
-            setIdenity(idenity);
+        if (identity != null)
+            setIdentity(identity);
     }
 
     @Override
@@ -73,11 +73,11 @@ public class Human implements Serializable {
         Human human = (Human) o;
         return Objects.equals(name, human.name) &&
                 Objects.equals(birthday, human.birthday) &&
-                Objects.equals(idenity, human.idenity);
+                Objects.equals(identity, human.identity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, birthday, idenity);
+        return Objects.hash(name, birthday, identity);
     }
 }

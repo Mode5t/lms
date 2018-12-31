@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="borrowedBooks">
+    <table>
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>书名</th>
+            <th>作者</th>
+            <th>类型</th>
+            <th>出版商家</th>
+            <th>出版日期</th>
+            <th>价钱</th>
+            <th>借出时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody th:each="bookRecord:${bookBorrowRecords}">
+        <tr th:each="bookInstance:${bookRecord.bookInstances}">
+            <th th:text="${bookInstance.id}"></th>
+            <th th:text="${bookRecord.book.name}"></th>
+            <th th:text="${bookRecord.book.author}"></th>
+            <th th:text="${bookRecord.book.type}"></th>
+            <th th:text="${bookRecord.book.publisher}"></th>
+            <th th:text="${bookRecord.book.getPublicationDateString()}"></th>
+            <th th:text="${bookRecord.book.price}"></th>
+            <th th:text="${bookInstance.getBorrowedDateString()}"></th>
+            <th th:href="@{'/book/returnBook?isbn='+${bookInstance.isbn}+'&id='+${bookInstance.id}}"></th>
+        </tr>
+
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

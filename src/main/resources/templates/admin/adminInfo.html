@@ -5,36 +5,23 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-<script type="text/javascript">
-    function jump(url) {
-        window.location.href = url;
-    }
+<body th:fragment="info">
+<div>
+    <div th:if="${session.user}" th:object="${session.user}">
+        <div>
+            个人信息<br>
+            名&emsp;字:<span th:text="*{name}"></span><br>
+            生&emsp;日:<span th:text="*{getFormatBirthday('yyyy年MM月dd日')}"></span><br>
+            身份证:<span th:text="*{identity}"></span><br>
+        </div>
+        <div>
+            账号信息<br>
+            用户名:<span th:text="*{username}"></span><br>
+            状&emsp;态:<span th:text="*{isOnline()}? '在线':'离线'"></span><br>
+        </div>
 
-    function jumpWithParam(url, key, value) {
-        window.location.href = url + '?' + key + '=' + value;
-    }
-</script>
-<div th:if="${session.user}" th:object="${session.user}">
-    <div>
-        个人信息<br>
-        名&emsp;字:<span th:text="*{name}"></span><br>
-        生&emsp;日:<span th:text="*{getFormatBirthday('yyyy年MM月dd日')}"></span><br>
-        身份证:<span th:text="*{idenity}"></span><br>
     </div>
-    <div>
-        账号信息<br>
-        用户名:<span th:text="*{username}"></span><br>
-        状&emsp;态:<span th:text="*{isOnline()}? '在线':'离线'"></span><br>
-    </div>
+    <span th:unless="${session.user}" th:text="非法访问"></span>
 </div>
-
-<span th:unless="${session.user}" th:text="非法访问"></span>
-
-<input type="button" value="修改信息" onclick="jumpWithParam('/jump','url','admin/adminModify')">
-<input type="button" value="修改用户名" onclick="jumpWithParam('/jump','url','user/usernameModify')">
-<input type="button" value="修改密码" onclick="jumpWithParam('/jump','url','user/passwordModify')">
-
-
 </body>
 </html>

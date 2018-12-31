@@ -1,6 +1,7 @@
 package cn.chy.lms.bean.book;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -25,6 +26,11 @@ public class Book implements Serializable {
         this.publisher = publisher;
         this.publicationDate = publicationDate;
         this.price = price;
+    }
+
+    public String getPublicationDateString() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        return simpleDateFormat.format(publicationDate);
     }
 
     public String getIsbn() {

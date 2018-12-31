@@ -1,11 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- 书本的信息页面 -->
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-
+<div id="bookInfo">
+    书名:<span th:text="${bookRecord.book.name}"></span>
+    作者:<span th:text="${bookRecord.book.author}"></span>
+    类型:<span th:text="${bookRecord.book.type}"></span>
+    出版商家:<span th:text="${bookRecord.book.publisher}"></span>
+    出版日期:<span th:text="${bookRecord.book.getPublicationDateString()}"></span>
+    总计数目:<span th:text="${bookRecord.bookInstances.size()}"></span>
+    在库数目:<span th:text="${bookRecord.getInLibrary()}"></span>
+</div>
+<div id="books">
+    <table>
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>状态</th>
+            <th>借出时间</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="bookInstance:${bookRecord.bookInstances}">
+            <td th:text="${bookInstance.id}"></td>
+            <td th:text="${bookInstance.isBorrowed()}==true?'借出':'在库'"></td>
+            <td th:if="${bookInstance.isBorrowed()}==true" th:text="${bookInstance.getBorrowDateString()}"></td>
+            <td th:unless="${bookInstance.isBorrowed()}==true" th:text="无"></td>
+            <td th:unless="${bookInstance.isBorrowed()}==true">
+                <a th:href="@{'/book/borrowBook?isbn='+${bookInstance.isbn}+'&id='+${bookInstance.id}}">借书</a>
+            </td>
+        </tr>
+        </thead>
+    </table>
+</div>
 </body>
 </html>

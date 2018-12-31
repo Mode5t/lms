@@ -1,11 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- 书本信息修改 -->
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-
+<div id="bookInfo">
+    <form method="post" action="/book/updateBook">
+        <label>
+            书&emsp;&emsp;名:
+            <input name="name" type="text" th:value="${book.name}" required="required"><br>
+        </label>
+        <label>
+            作&emsp;&emsp;者:
+            <input name="author" type="text" th:value="${book.author}" required="required"><br>
+        </label>
+        <label>
+            类&emsp;&emsp;型:
+            <input name="type" type="text" th:value="${book.type}" required="required"><br>
+        </label>
+        <label>
+            出版商家:
+            <input name="publisher" type="text" th:value="${book.publisher}" required="required"><br>
+        </label>
+        <label>
+            出版日期:
+            <input name="publicationDate" type="date" th:value="${book.getPublicationDateString()}" required="required"><br>
+        </label>
+        <label>
+            价&emsp;&emsp;钱:
+            <input name="price" type="text" th:value="${book.price}" required="required"><br>
+        </label>
+        <label>
+            <input hidden="hidden" type="text" name="isbn" th:value="book.isbn">
+        </label>
+        <input type="submit" value="修改">
+    </form>
+</div>
 </body>
 </html>

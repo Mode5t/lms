@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>登入</title>
+
 </head>
-<body>
+<body th:fragment="login">
 
 <form method="post" action="/login/check">
     用户名:<label>
@@ -19,9 +20,7 @@
     <label>
         <input type="radio" name="type" value="管理员">
     </label>管理员<br>
-    <input type="submit" value="登入">
-
-
+    <input type="submit" value="登入"> <a href="/jump?url=user/identityCheck">忘记密码</a>
 </form>
 </body>
 </html>

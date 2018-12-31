@@ -1,11 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- 读者信息修改页面 -->
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<script th:inline="javascript">
 
+    function checkIdentity(identity) {
+        var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        return regIdNo.test(identity);
+    }
+
+    function checkName(name) {
+        var regName = /^[\u4e00-\u9fa5]{2,4}$/;
+        return regName.test(name);
+    }
+
+    function checkPassWord(password) {//密码必须包含数字和字母
+        var reg = new RegExp(/^(?![^a-zA-Z]+$)(?!\D+$)/);
+        return reg.test(password);
+    }
+
+    function check() {
+        if (!checkIdentity(document.getElementById('identity').value)) {
+            alert("身份证非法!");
+            return false;
+        }
+        if (!checkName(document.getElementById('name').value)) {
+            alert("名字非法!");
+            return false;
+        }
+        if (!checkPassWord(document.getElementById('password').value)) {
+            alert("密码必须包含数字和字母");
+            return false;
+        }
+        return true;
+    }
+</script>
+<form method="post" action="/user/updateReader" onsubmit="return check()">
+    <div th:if="${session.user}" th:object="${session.user}">
+        个人信息<br>
+        名&emsp;字:<input type="text" name="name" th:value="*{name}" required="required"><span
+            style="color:red">*</span><br>
+        生&emsp;日:<input type="date" name="birthday" th:value="*{getFormatBirthday('yyyy-MM-dd')}"
+                        required="required"><span style="color:red">*</span><br>
+        身份证:<input type="text" name="identity" th:value="*{identity}" required="required"><span
+            style="color:red">*</span><br>
+        院&emsp;系:<input type="text" name="department" th:value="*{department}"><br>
+        专&emsp;业:<input type="text" name="major" th:value="*{major}"><br>
+        年&emsp;级:<input type="text" name="grade" th:value="*{grade}"><br>
+    </div>
+    <input type="submit" value="修改">
+</form>
+<span th:unless="${session.user}" th:text="非法访问"></span>
 </body>
 </html>

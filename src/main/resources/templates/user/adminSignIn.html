@@ -1,16 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>添加管理员</title>
 </head>
-<body>
-<form action="/user/addReader" method="post">
-    用户名:<input name="username" type="text" required="required"><br>
-    密&emsp;码:<input name="password" type="password" required="required"><br>
-    名&emsp;字:<input name="name" type="text" required="required"><br>
-    生&emsp;日:<input name="birthday" type="date" required="required" style="width:168px;height: 18px"><br>
-    身份证:<input name="idenity" type="text" required="required"><br>
+<body th:fragment="adminSign">
+<script th:inline="javascript">
+
+    function checkIdentity(identity) {
+        var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        return regIdNo.test(identity);
+    }
+
+    function checkName(name) {
+        var regName = /^[\u4e00-\u9fa5]{2,4}$/;
+        return regName.test(name);
+    }
+
+    function checkPassWord(password) {//密码必须包含数字和字母
+        var reg = new RegExp(/^(?![^a-zA-Z]+$)(?!\D+$)/);
+        return reg.test(password);
+    }
+
+    function check() {
+        if (!checkIdentity(document.getElementById('identity').value)) {
+            alert("身份证非法!");
+            return false;
+        }
+        if (!checkName(document.getElementById('name').value)) {
+            alert("名字非法!");
+            return false;
+        }
+        if (!checkPassWord(document.getElementById('password').value)) {
+            alert("密码必须包含数字和字母");
+            return false;
+        }
+        return true;
+    }
+</script>
+<form action="/user/addAdmin" method="post" onsubmit="return check()">
+    用户名:<input name="username" id="username" type="text" required="required"> <span style="color:red">*</span><br>
+    密&emsp;码:<input name="password" id="password" type="password" required="required"> <span
+        style="color:red">*</span><br>
+    名&emsp;字:<input name="name" id="name" type="text" required="required"> <span style="color:red">*</span><br>
+    生&emsp;日:<input name="birthday" id="birthday" type="date" required="required" style="width:168px;height: 18px">
+    <span style="color:red">*</span><br>
+    身份证:<input name="identity" id="identity" type="text" required="required"> <span style="color:red">*</span><br>
     <input type="submit" value="添加">
 </form>
 </body>

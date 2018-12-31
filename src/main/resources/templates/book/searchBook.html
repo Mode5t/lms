@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- 书本搜索页面 -->
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
+<body th:fragment="bookSearch">
 <form method="get" action="/book/findBooks">
     <input type="search" name="keyword">
     <input type="submit" value="搜索">
