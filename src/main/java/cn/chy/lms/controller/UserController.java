@@ -209,7 +209,7 @@ public class UserController {
         if (user != null) {
             return jump("user/userInfo", "user", user);
         }
-        return jump("user/searchUser", "message", "无对应ID的账号");
+        return jump("user/searchUser", "message", "无对应身份证的账号");
     }
 
 

@@ -15,9 +15,23 @@
 <body class="background" onload="dialog()">
 <script th:inline="javascript">
     function dialog() {
-        if (!isEmpty([${message}])) {
-            alert([${message}]);
+        if (!isEmpty([[${message}]])) {
+            alert([[${message}]]);
         }
+    }
+
+    function checkIdentity(identity) {
+        var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        return regIdNo.test(identity);
+    }
+
+    function check() {
+
+        if (!checkIdentity(document.getElementById('identity_input').value)) {
+            alert('身份证非法!');
+            return false;
+        }
+        return true;
     }
 
     function isEmpty(obj) {
@@ -33,9 +47,10 @@
          style="text-align: center;float: right;margin-top: 80px;margin-right: 600px;background-color: white;border-radius: 20px">
         <div style="text-align: center;"><span style="font-size: 25px">用户查询</span><br></div>
         <div style="margin: 10px">
-            <form class="form-inline form--lg" method="get" action="/user/findByIdentity">
-                <input class="form-control input-lg" style="width: 400px" type="search" placeholder="身份证"
-                       name="identity">
+            <form class="form-inline form--lg" method="get" action="/user/findByIdentity" onsubmit="return check()">
+                <input id="identity_input" class="form-control input-lg" style="width: 400px" type="search"
+                       placeholder="身份证"
+                       name="identity" required>
                 <input class="btn btn-primary btn-lg" type="submit" value="搜索">
             </form>
         </div>
