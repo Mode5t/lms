@@ -59,7 +59,7 @@ public class LoginController {
             userMapper.update(user);
             return ModelAndViewUtils.jump(url);
         }
-        return ModelAndViewUtils.result("用户名不存在或密码错误");
+        return ModelAndViewUtils.jump("user/login", "message", "用户名不存在或密码错误");
     }
 
     @RequestMapping(value = "logout")
