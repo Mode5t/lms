@@ -27,7 +27,7 @@ public class BookInstance implements Serializable {
     }
 
 
-    public String getBorrwoedDateString() {
+    public String getBorrowedDateString() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
         return simpleDateFormat.format(borrowDate);
     }
@@ -41,7 +41,7 @@ public class BookInstance implements Serializable {
     public void returnBook() {
         isBorrowed = false;
         returnDate = new Date();
-        username = "library";
+        username = "libraryKeeper";
     }
 
     public String getUsername() {

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>新书添加</title>
+    <title>旧书添加</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link type="text/css" th:href="@{../../static/css/background.css}" rel="stylesheet">
@@ -31,10 +31,10 @@
      th:include="frame/readerNavigation::readerMenu"></div>
 
 <div class="readerSignInBackground"
-     style="height: 620px;float: right;margin-top: 100px;margin-right: 600px;background: white">
+     style="height: 300px;float: right;margin-top: 100px;margin-right: 600px;background: white">
     <div class="row readerSignIn" style="margin-left: 40px">
         <div class="page-header center">
-            <h2 style="margin-bottom: 10px;">新书添加</h2>
+            <h2 style="margin-bottom: 10px;">旧书添加</h2>
         </div>
         <form method="post" action="/book/addBook" role="form" class="form-horizontal">
             <div class="form-group form-group-lg">
@@ -43,42 +43,6 @@
                     <input type="text" name="isbn" required="required" class="form-control"
                            placeholder="isbn"
                            aria-describedby="isbn" autofocus>
-                </div>
-                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
-                    <span class="input-group-addon" style="font-size: 20px" id="name">书&emsp;&emsp;名:</span>
-                    <input type="text" name="name" required="required" class="form-control"
-                           placeholder="name"
-                           aria-describedby="name">
-                </div>
-                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
-                    <span class="input-group-addon" style="font-size: 20px" id="author">作&emsp;&emsp;者:</span>
-                    <input type="text" name="author" required="required" class="form-control"
-                           placeholder="author"
-                           aria-describedby="author">
-                </div>
-                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
-                    <span class="input-group-addon" style="font-size: 20px" id="type">类&emsp;&emsp;型:</span>
-                    <input type="text" name="type" required="required" class="form-control"
-                           placeholder="type"
-                           aria-describedby="type">
-                </div>
-                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
-                    <span class="input-group-addon" style="font-size: 20px" id="publisher">出版商家:</span>
-                    <input type="text" name="publisher" required="required" class="form-control"
-                           placeholder="publisher"
-                           aria-describedby="publisher">
-                </div>
-                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
-                    <span class="input-group-addon" style="font-size: 20px" id="publicationDate">出版日期:</span>
-                    <input type="date" name="publicationDate" required="required" class="form-control"
-                           placeholder="publicationDate"
-                           aria-describedby="publicationDate">
-                </div>
-                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
-                    <span class="input-group-addon" style="font-size: 20px" id="price">价&emsp;&emsp;钱:</span>
-                    <input type="text" name="price" required="required" class="form-control"
-                           placeholder="price"
-                           aria-describedby="price">
                 </div>
                 <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
                     <span class="input-group-addon" style="font-size: 20px" id="number">数&emsp;&emsp;目:</span>

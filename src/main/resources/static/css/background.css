@@ -1,0 +1,78 @@
+
+.background {
+    background-image: url(../image/background.jpg);
+}
+
+
+.loginBackground {
+    width: 380px;
+    height: 350px;
+    background: cornflowerblue;
+    border-radius: 30px;
+}
+
+.indexBackground {
+    background-image: url(../image/indexBackground.jpg);
+}
+
+.navigation {
+    margin-left: 75px;
+    margin-top: 75px;
+}
+
+.div {
+    width: fit-content;
+    height: fit-content;
+}
+
+.font {
+    font-size: 20px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.attr {
+    width: fit-content;
+    height: fit-content;
+    font-size: 20px;
+    color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+}
+
+.field {
+    font-size: 20px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.loginSize {
+    width: 300px;
+    height: 300px;
+}
+
+.forgetPassword {
+    float: right;
+}
+
+.submitButton {
+    width: 225px;
+}
+
+.center {
+    text-align: center;
+}
+
+.readerSignIn {
+    width: 300px;
+    height: 600px;
+}
+
+.readerSignInBackground {
+    width: 380px;
+    height: 600px;
+    background: cornflowerblue;
+    border-radius: 30px;
+}
+

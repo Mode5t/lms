@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>用户注册</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>搜索书籍</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link type="text/css" th:href="@{../../static/css/background.css}" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 </head>
-<body th:fragment="readerSign">
+<body class="background">
 <script th:inline="javascript">
 
     function checkIdentity(identity) {
@@ -23,32 +31,88 @@
     }
 
     function check() {
-        if (!checkIdentity(document.getElementById('identity').value)) {
+        if (!checkIdentity(document.getElementById('identity_input').value)) {
             alert("身份证非法!");
             return false;
         }
-        if (!checkName(document.getElementById('name').value)) {
+        if (!checkName(document.getElementById('name_input').value)) {
             alert("名字非法!");
             return false;
         }
-        if (!checkPassWord(document.getElementById('password').value)) {
+        if (!checkPassWord(document.getElementById('password_input').value)) {
             alert("密码必须包含数字和字母");
             return false;
         }
         return true;
     }
 </script>
-<form action="/user/addReader" method="post">
-    用户名:<input name="username" type="text" required="required"> <span style="color:red">*</span><br>
-    密&emsp;码:<input name="password" type="password" required="required"> <span style="color:red">*</span><br>
-    名&emsp;字:<input name="name" type="text" required="required"> <span style="color:red">*</span><br>
-    生&emsp;日:<input name="birthday" type="date" style="width:168px;height: 18px" required="required"> <span
-        style="color:red">*</span><br>
-    身份证:<input name="identity" type="text" required="required"> <span style="color:red">*</span><br>
-    院&emsp;系:<input name="department" type="text"><br>
-    专&emsp;业:<input name="major" type="text"><br>
-    年&emsp;级;<input name="grade" type="text"><br>
-    <input type="submit" value="注册">
-</form>
+<div th:include="frame/head::header"></div>
+
+<div class="readerSignInBackground" style="float: right;margin-top: 100px;margin-right: 150px;background: white">
+    <div class="row readerSignIn" style="margin-left: 40px">
+        <div class="page-header center">
+            <h2 style="margin-bottom: 10px;">用户注册</h2>
+        </div>
+        <form method="post" action="/user/addReader" role="form" onsubmit="return check()" class="form-horizontal">
+            <div class="form-group form-group-lg">
+                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
+                    <span class="input-group-addon" style="font-size: 20px" id="username">用户名:</span>
+                    <input type="text" name="username" required="required" class="form-control"
+                           placeholder="Username"
+                           aria-describedby="username">
+                </div>
+                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
+                    <span class="input-group-addon" style="font-size: 20px" id="password">密&emsp;码:</span>
+                    <input id="password_input" type="password" name="password" required="required" class="form-control"
+                           placeholder="Password"
+                           aria-describedby="password">
+                </div>
+                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
+                    <span class="input-group-addon" style="font-size: 20px" id="name">名&emsp;字:</span>
+                    <input id="name_input" type="text" name="name" required="required" class="form-control"
+                           placeholder="name"
+                           aria-describedby="name">
+                </div>
+                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
+                    <span class="input-group-addon" style="font-size: 20px" id="birthday">生&emsp;日:</span>
+                    <input type="date" name="birthday" required="required" class="form-control"
+                           aria-describedby="birthday">
+                </div>
+                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
+                    <span class="input-group-addon" style="font-size: 20px" id="identity">身份证:</span>
+                    <input id="identity_input" type="text" name="identity" required="required" class="form-control"
+                           placeholder="identity"
+                           aria-describedby="identity">
+                </div>
+                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
+                    <span class="input-group-addon" style="font-size: 20px" id="department">院&emsp;系:</span>
+                    <input type="text" name="department" required="required" class="form-control"
+                           placeholder="department"
+                           aria-describedby="department">
+                </div>
+                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
+                    <span class="input-group-addon" style="font-size: 20px" id="major">专&emsp;业:</span>
+                    <input type="text" name="major" required="required" class="form-control"
+                           placeholder="major"
+                           aria-describedby="major">
+                </div>
+                <div class="input-group" style="margin-top: 5px;margin-bottom: 5px">
+                    <span class="input-group-addon" style="font-size: 20px" id="grade">年&emsp;级;</span>
+                    <input type="text" name="grade" required="required" class="form-control"
+                           placeholder="grade"
+                           aria-describedby="grade">
+                </div>
+                <div class="center">
+                    <input class="btn btn-primary submitButton" style=" margin-top: 5px;font-size: 24px" type="submit"
+                           value="注册" autofocus="autofocus">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 </html>

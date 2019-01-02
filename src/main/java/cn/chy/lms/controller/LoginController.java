@@ -62,6 +62,18 @@ public class LoginController {
         return ModelAndViewUtils.result("用户名不存在或密码错误");
     }
 
+    @RequestMapping(value = "logout")
+    public ModelAndView logout(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        user.setOnline(false);
+        userMapper.update(user);
+        session.removeAttribute("user");
+        session.removeAttribute("type");
+        session.removeAttribute("isOnline");
+        session.removeAttribute("borrowedBookRecords");
+        return ModelAndViewUtils.jump("user/login");
+    }
+
 
     private void findBookReaderBorrowed(String username, HttpSession session) {
         List<BookRecord> bookRecords = new ArrayList<>();

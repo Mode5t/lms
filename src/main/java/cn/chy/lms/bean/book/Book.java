@@ -28,8 +28,8 @@ public class Book implements Serializable {
         this.price = price;
     }
 
-    public String getPublicationDateString() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+    public String getPublicationDateString(String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(publicationDate);
     }
 

@@ -10,12 +10,12 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class JumpController {
 
-    @RequestMapping(value = "jump", method = RequestMethod.GET)
+    @RequestMapping(value = "/jump", method = RequestMethod.GET)
     public ModelAndView jump(@RequestParam String url) {
         return ModelAndViewUtils.jump(url);
     }
 
-    @RequestMapping(value = "jumpWithUsername", method = RequestMethod.GET)
+    @RequestMapping(value = "/jumpWithUsername", method = RequestMethod.GET)
     public ModelAndView jumpWithParam(@RequestParam String url, @RequestParam String username) {
         return ModelAndViewUtils.jump(url, "username", username);
     }

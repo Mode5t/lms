@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>读者信息</title>
+    <title>用户信息</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link type="text/css" th:href="@{../../static/css/background.css}" rel="stylesheet">
@@ -14,31 +14,45 @@
     <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 </head>
 <body class="background">
+<script th:if="${session.user}" th:inline="javascript">
+
+    function jump(url) {
+        if (isEmpty([[${session.isOnline}]]))
+            url = 'user/login';
+        window.location.href = '/jump?url=' + url;
+    }
+
+    function jumpWithUsername(url) {
+        if (isEmpty([[${session.isOnline}]]))
+            jump('user/login');
+        else
+            window.location.href = '/jumpWithUsername?url=' + url + '&username=' + [[${session.user.username}]];
+    }
+
+    function isEmpty(obj) {
+        return typeof obj == "undefined" || obj == null || obj === "" || obj === false;
+    }
+
+
+    function checkPassword() {
+        alert([[${user.password}]]);
+    }
+
+</script>
 <div th:include="frame/head::header"></div>
 <div>
     <div id="navigation" class="navigation" style="float: left;width: 200px;height: 800px"
-         th:include="frame/readerNavigation::readerMenu"></div>
+         th:include="frame/adminNavigation::adminMenu"></div>
 
     <div th:fragment="info" class="div"
-         style="float: right;margin-top: 80px;margin-right: 600px;background-color: white;border-radius: 20px;border-style: solid">
-        <div style="border-radius: 20px;margin: 15px;" th:if="${session.user}" th:object="${session.user}">
+         style="float: right;margin-top: 80px;margin-right: 600px;background-color: white;border-radius: 20px">
+        <div style="border-radius: 20px;margin: 15px;" th:if="${user}" class="div" th:object="${user}">
             <div>
                 <div style="text-align: center"><span class="font">个人信息</span><br></div>
-                <span class="label label-info field">名&emsp;字:</span><span class="attr"
-                                                                           th:text="*{name}"></span><br>
+                <span class="label label-info field">名&emsp;字:</span><span class="attr" th:text="*{name}"></span><br>
                 <span class="label label-info field">生&emsp;日:</span><span class="attr"
                                                                            th:text="*{getFormatBirthday('yyyy年MM月dd日')}"></span><br>
                 <span class="label label-info field">身份证:</span><span class="attr" th:text="*{identity}"></span><br>
-                <div th:unless="${session.user.department}eq 'null'"><span
-                        class="label label-info field">院&emsp;系:</span><span class="attr"
-                                                                             th:text="*{department}"></span><br>
-                </div>
-                <div th:unless="${session.user.major} eq 'null'"><span
-                        class="label label-info field">专&emsp;业:</span><span
-                        class="attr" th:text="*{major}"></span><br></div>
-                <div th:unless="${session.user.grade} eq '0'"><span
-                        class="label label-info field">年&emsp;级:</span><span
-                        class="attr" th:text="*{grade}"></span><br></div>
                 <div>
                     <div style="text-align: center"><span class="font">账号信息</span><br></div>
                     <span class="label label-info field">用户名:</span><span class="attr" th:text="*{username}"></span><br>
@@ -47,6 +61,15 @@
                 </div>
             </div>
             <span th:if="${reader}==null and ${session.user}==null" th:text="非法访问"></span>
+        </div>
+        <div style="text-align: center;margin-bottom: 10px">
+            <form id="delete" method="post" action="/user/deleteUser">
+                <label>
+                    <input hidden="hidden" type="text" th:value="${user.username}" name="username">
+                </label>
+                <input class="btn btn-danger btn-lg" type="submit" value="删除用户"/>
+                <input class="btn btn-warning btn-lg" type="button" value="查看密码" onclick="checkPassword()"/>
+            </form>
         </div>
     </div>
 </div>

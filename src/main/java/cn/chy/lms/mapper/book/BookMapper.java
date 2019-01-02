@@ -20,7 +20,7 @@ public interface BookMapper {
     @Delete("delete from book where isbn=#{isbn}")
     public boolean delete(@Param("isbn") String isbn);
 
-    @Update("update book set name=#{name},author=#{author},type=#{type},publisher=#{punlisher},publicationDate=#{publicationDate},price=#{price} where isbn=#{isbn}")
+    @Update("update book set name=#{name},author=#{author},type=#{type},publisher=#{publisher},publicationDate=#{publicationDate},price=#{price} where isbn=#{isbn}")
     public boolean update(Book book);
 
     @Select("select * from book where isbn=#{isbn}")

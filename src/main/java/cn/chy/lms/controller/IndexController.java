@@ -11,7 +11,7 @@ public class IndexController {
 
     @RequestMapping("/")
     public ModelAndView index() {
-        return ModelAndViewUtils.jump("index");
+        return ModelAndViewUtils.jump("user/login");
     }
 
 

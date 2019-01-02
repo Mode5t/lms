@@ -19,7 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static cn.chy.lms.util.ModelAndViewUtils.jump;
 import static cn.chy.lms.util.ModelAndViewUtils.result;
@@ -111,7 +110,7 @@ public class UserController {
         if (update(reader)) {
             if (isReader(session.getAttribute("user")))
                 session.setAttribute("user", reader);
-            return jump("reader/readerInfo");
+            return jump("reader/readerIndex");
         } else
             return jump("admin/adminIndex");
     }
@@ -126,13 +125,13 @@ public class UserController {
         }
         session.setAttribute("user", administrator);
         userMapper.update(administrator);
-        return jump("admin/adminInfo");
+        return jump("admin/adminIndex");
     }
 
     @RequestMapping(value = "/identityCheck", method = RequestMethod.POST)
     public ModelAndView identityCheck(@RequestParam(required = false) String username, @RequestParam String name, @RequestParam String identity) {
         User user;
-        if (username != "")
+        if (!username.equals(""))
             user = userMapper.findByUsername(username);
         else
             user = userMapper.findById(identity);
@@ -152,7 +151,7 @@ public class UserController {
                 return jump("reader/readerIndex");
             return jump("admin/adminIndex");
         }
-        return result("修改成功");
+        return jump("user/login", "message", "修改成功");
     }
 
     public boolean isReader(Object user) {
@@ -173,16 +172,18 @@ public class UserController {
         if (user == null) {
             userMapper.updateUsername(newUsername, username);
             User online = (User) session.getAttribute("user");
-            if (isReader(online))
-                online.setUsername(newUsername);
-            return result("用户名更新成功");
+            online.setUsername(newUsername);
+            if (isReader(online)) {
+                return jump("reader/readerIndex", "message", "修改成功");
+            }
+            return jump("admin/adminIndex", "message", "修改成功");
         } else {
             return jump("user/usernameModify", new String[]{"isFreeUsername", "username"}, new String[]{"No", username});
         }
     }
 
     //查找一个人用户的信息
-    @RequestMapping(value = "findByUsername")
+    @RequestMapping(value = "/findByUsername")
     public ModelAndView findByUsername(@RequestParam("username") String username) {
         User user = userMapper.findByUsername(username);
         Reader reader = readerMapper.findByUsername(username);
@@ -202,23 +203,13 @@ public class UserController {
     }
 
     //在管理处进行账号找回
-    @RequestMapping(value = "findByIdentity", method = RequestMethod.POST)
-    public ModelAndView findById(String identity) {
+    @RequestMapping(value = "/findByIdentity")
+    public ModelAndView findById(@RequestParam("identity") String identity) {
         User user = userMapper.findById(identity);
         if (user != null) {
-            return jump("userInfo", "user", user);
+            return jump("user/userInfo", "user", user);
         }
-        return result("无对应ID的账号");
-    }
-
-
-    public User getUser(Map<String, Object> params, boolean isOnline) {
-        String name = (String) params.get("name");
-        Date birthday = (Date) params.get("birthday");
-        String identity = (String) params.get("identity");
-        String username = (String) params.get("username");
-        String password = (String) params.get("password");
-        return new User(name, birthday, identity, username, password, false);
+        return jump("user/searchUser", "message", "无对应ID的账号");
     }
 
 

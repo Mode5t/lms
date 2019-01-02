@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>搜索书籍</title>
+    <title>搜索用户</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link type="text/css" th:href="@{../../static/css/background.css}" rel="stylesheet">
@@ -12,21 +12,30 @@
     <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
 </head>
-<body class="background">
+<body class="background" onload="dialog()">
+<script th:inline="javascript">
+    function dialog() {
+        if (!isEmpty([${message}])) {
+            alert([${message}]);
+        }
+    }
+
+    function isEmpty(obj) {
+        return typeof obj == "undefined" || obj == null || obj === "" || obj === false;
+    }
+</script>
 <div th:include="frame/head::header"></div>
 <div>
-    <div th:if="${session.user.isAdmin()}" class="navigation" style="float: left;width: 200px;height: 800px"
+    <div id="navigation" class="navigation" style="float: left;width: 200px;height: 800px"
          th:include="frame/adminNavigation::adminMenu"></div>
-    <div th:unless="${session.user.isAdmin()}" class="navigation" style="float: left;width: 200px;height: 800px"
-         th:include="frame/readerNavigation::readerMenu"></div>
 
     <div class="div"
          style="text-align: center;float: right;margin-top: 80px;margin-right: 600px;background-color: white;border-radius: 20px">
+        <div style="text-align: center;"><span style="font-size: 25px">用户查询</span><br></div>
         <div style="margin: 10px">
-            <div style="text-align: center;"><span style="font-size: 25px">书籍查询</span><br></div>
-            <form class="form-inline" method="get" action="/book/findBooks">
-                <input class="form-control input-lg" style="width: 400px" type="search" placeholder="关键字"
-                       name="keyword">
+            <form class="form-inline form--lg" method="get" action="/user/findByIdentity">
+                <input class="form-control input-lg" style="width: 400px" type="search" placeholder="身份证"
+                       name="identity">
                 <input class="btn btn-primary btn-lg" type="submit" value="搜索">
             </form>
         </div>

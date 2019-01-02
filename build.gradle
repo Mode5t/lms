@@ -38,7 +38,4 @@ dependencies {
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     implementation("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
-
-
-
 }
